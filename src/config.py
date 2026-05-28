@@ -7,7 +7,7 @@ class Config:
 
     GOOGLE_API_KEY: str = os.getenv("GOOGLE_API_KEY", "")
     LLM_MODEL: str = "gemini-2.5-flash"
-    EMBEDDING_MODEL: str = "models/embedding-001"
+    EMBEDDING_MODEL: str = "gemini-embedding-001"
 
     # Chunking settings (we'll explain these deeply in Step 6)
     CHUNK_SIZE: int = 500       # Characters per chunk

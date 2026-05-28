@@ -1,32 +1,12 @@
 # src/ingestion/chunker.py
 from typing import List
-from langchain.schema import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from src.config import config
 
 
 class DocumentChunker:
-    """
-    Splits large documents into smaller overlapping chunks.
-
-    Why RecursiveCharacterTextSplitter?
-    It tries to split on natural boundaries in this order:
-      1. Paragraphs (\n\n)
-      2. Lines (\n)
-      3. Sentences (. ! ?)
-      4. Words (space)
-      5. Characters (last resort)
-
-    This means it respects the natural structure of text rather than
-    blindly cutting at character 500. A sentence won't be split mid-word
-    unless absolutely necessary.
-
-    Enterprise alternatives:
-    - SemanticChunker: uses embeddings to split at meaning boundaries
-    - MarkdownTextSplitter: respects # headers and code blocks
-    - HTMLSectionSplitter: splits on <h1>, <h2> tags
-    - Custom splitters: for proprietary formats (legal docs, medical records)
-    """
+   
 
     def __init__(
         self,
@@ -42,17 +22,7 @@ class DocumentChunker:
         )
 
     def chunk(self, documents: List[Document]) -> List[Document]:
-        """
-        Split documents into chunks.
 
-        Each chunk is still a Document object with:
-        - page_content: the chunk text
-        - metadata: inherited from parent (source file, page number)
-                    PLUS chunk index added by us
-
-        This metadata is how we tell users "this answer came from
-        page 12 of policy_document.pdf"
-        """
         chunks = self.splitter.split_documents(documents)
 
         # Add chunk index to metadata for debugging and citation
